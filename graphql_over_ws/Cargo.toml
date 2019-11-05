@@ -1,0 +1,13 @@
+[package]
+name = "graphql_over_ws"
+version = "0.1.0"
+authors = ["nWacky <gosha.evtushenko@gmail.com>"]
+description = "GraphQL over Websocket protocole"
+license = "BSD-2-Clause"
+documentation = "https://docs.rs/graphql_over_ws"
+repository = "https://github.com/graphql-rust/juniper"
+edition = "2018"
+
+[dependencies]
+serde = "1.0"
+juniper = { path = "../juniper", features = ["async"] }

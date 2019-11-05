@@ -47,6 +47,8 @@ use std::{
 };
 use std::{pin::Pin, sync::Arc};
 
+use graphql_over_ws::*;
+
 use futures::future::poll_fn;
 #[cfg(feature = "async")]
 use futures03::{channel::mpsc, stream::StreamExt};
@@ -433,9 +435,9 @@ where
 
             let schema = schema.clone();
             let context = context.clone();
-            let request: WsPayload<S> = serde_json::from_str(msg).unwrap();
+            let request: ClientPayload<S> = serde_json::from_str(msg).unwrap();
 
-            match request.type_name.as_str() {
+            match request.type_name.to_string().as_str() {
                 "connection_init" => {}
                 "start" => {
                     let ws_tx = ws_tx.clone();
@@ -512,35 +514,6 @@ where
             // empty `for_each` here to keep executing this stream
             async {}
         })
-}
-
-#[cfg(feature = "async")]
-#[derive(Deserialize)]
-#[serde(bound = "GraphQLPayload<S>: Deserialize<'de>")]
-struct WsPayload<S>
-where
-    S: ScalarValue + Send + Sync + 'static,
-    for<'b> &'b S: ScalarRefValue<'b>,
-{
-    id: Option<String>,
-    #[serde(rename(deserialize = "type"))]
-    type_name: String,
-    payload: Option<GraphQLPayload<S>>,
-}
-
-#[cfg(feature = "async")]
-#[derive(Debug, Deserialize)]
-#[serde(bound = "InputValue<S>: Deserialize<'de>")]
-struct GraphQLPayload<S>
-where
-    S: ScalarValue + Send + Sync + 'static,
-    for<'b> &'b S: ScalarRefValue<'b>,
-{
-    variables: Option<InputValue<S>>,
-    extensions: Option<HashMap<String, String>>,
-    #[serde(rename(deserialize = "operationName"))]
-    operaton_name: Option<String>,
-    query: Option<String>,
 }
 
 #[cfg(feature = "async")]

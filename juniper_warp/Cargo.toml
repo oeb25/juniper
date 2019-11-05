@@ -15,6 +15,7 @@ async = [ "juniper/async" ]
 #warp = "0.1.20"
 warp = { git = "https://github.com/seanmonstar/warp.git" }
 juniper = { version = "0.14.0", path = "../juniper", default-features = false  }
+graphql_over_ws = { version = "0.1.0", path = "../graphql_over_ws", default-features = false  }
 serde_json = "1.0.24"
 serde_derive = "1.0.75"
 failure = "0.1.2"
