@@ -443,12 +443,10 @@ where
     sink_rx.for_each(move |msg| {
         let msg = match msg {
             Ok(msg) => msg,
-            Err(_) => {
-                panic!("Socket closed");
-            } // msg @ Err(_) => {
-              //     println!("message is error: {:?}", msg);
-              //     return futures03::future::ready(());
-              // }
+            msg @ Err(_) => {
+                println!("message is error: {:?}", msg);
+                return futures03::future::ready(());
+            }
         };
 
         if msg.is_close() {
